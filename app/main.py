@@ -26,3 +26,8 @@ async def process(request: Request, text: str = Form(...), mode: str = Form(...)
         "output": output,
         "mode": mode
     })
+
+# For Vercel deployment
+@app.get("/api/health")
+async def health():
+    return {"status": "ok"}
