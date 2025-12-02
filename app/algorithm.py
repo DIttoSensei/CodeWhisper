@@ -86,47 +86,57 @@ def encrypt(text: str) -> str:
 #        DECRYPT
 # --------------------------
 def decrypt(cipher: str) -> str:
-    result = ""
+    result = []
     i = 0
     L = len(cipher)
 
     while i < L:
-        # Detect wrapped tokens: starts & ends with ¿
+        # 1️⃣ Check for wrapped token start
         if cipher[i] == '¿':
-            end = cipher.find('¿', i+1)
-            if end != -1:
-                chunk = cipher[i:end+1]
-                if chunk in REVERSE:
-                    result += REVERSE[chunk]
+            # find the next ¿ AFTER this one
+            end = i + 1
+            while end < L and cipher[end] != '¿':
+                end += 1
+
+            # include the ending ¿
+            if end < L and cipher[end] == '¿':
+                token = cipher[i:end+1]
+                if token in REVERSE:
+                    result.append(REVERSE[token])
                     i = end + 1
                     continue
-
-        # Try vowels or single-char tokens
-        found = False
-        for val, key in REVERSE.items():
-            if len(val) == 1 and cipher[i:i+1] == val:
-                result += key
+                else:
+                    # unknown wrapped token, just copy
+                    result.append(token)
+                    i = end + 1
+                    continue
+            else:
+                # malformed, just copy the single ¿
+                result.append(cipher[i])
                 i += 1
-                found = True
-                break
+                continue
 
-        if found:
+        # 2️⃣ Single-character tokens
+        ch = cipher[i]
+        if ch in REVERSE:
+            result.append(REVERSE[ch])
+            i += 1
             continue
 
-        # Unknown character
-        result += cipher[i]
+        # 3️⃣ Passthrough for unknown characters
+        result.append(ch)
         i += 1
 
-    return result
+    return "".join(result)
 
 
 # --------------------------
 #         TEST
 # --------------------------
-text = input("Enter text to encode: ")
-enc = encrypt(text.lower())
-dec = decrypt(enc)
+#text = input("Enter text to encode: ")
+#enc = encrypt(text.lower())
+#dec = decrypt(enc)
 
-print("\nEncrypted:\n", enc)
-print("\nDecrypted:\n", dec)
-print("\nSuccess:", dec == text.lower())
+#print("\nEncrypted:\n", enc)
+#print("\nDecrypted:\n", dec)
+#print("\nSuccess:", dec == text.lower())
