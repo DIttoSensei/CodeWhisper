@@ -4,6 +4,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
 
+
+
+
 # Import from same package
 from .algorithm import encrypt, decrypt
 
@@ -12,6 +15,9 @@ app = FastAPI()
 # Get the project root directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
