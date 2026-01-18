@@ -9,7 +9,7 @@ import os
 
 # Import from same package
 from .algorithm import encrypt, decrypt
-C:\Users\Owner\Documents\Project\Main\CodeWhisper\static\og-image.jpg
+
 app = FastAPI()
 
 # Get the project root directory
